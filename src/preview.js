@@ -2,10 +2,45 @@ import addons from '@kadira/storybook-addons';
 import { EVENT_ID } from './';
 
 let currentStory = "";
+let currentContext;
+
 const results = {};
 const beforeEachFunc = {};
 const afterFunc = {};
 const afterEachFunc = {};
+
+function setContext(storyName, {
+  skipped
+} = {}) {
+  if (!currentStory) {
+    currentStory = storyName;
+    results[currentStory] = {
+      children: {},
+      name: storyName,
+      skipped: skipped || false,
+      goodResults: [],
+      wrongResults: []
+    };
+    currentContext = results[currentStory];
+  } else {
+    if (!currentContext.children[storyName]) {
+      currentContext.children[storyName] = {
+        children: {},
+        name: storyName,
+        skipped: skipped || false,
+        goodResults: [],
+        wrongResults: []
+      };
+    }
+
+    currentContext = currentContext.children[storyName];
+  }
+}
+
+function clearContext() {
+  currentStory = "";
+  currentContext = undefined;
+}
 
 export function specs(specs) {
   let storyName = specs();
@@ -14,19 +49,12 @@ export function specs(specs) {
 }
 
 export const describe = (storyName, func) => {
-  if (!currentStory) {
-    currentStory = storyName;
-    results[currentStory] = {
-      goodResults: [],
-      wrongResults: []
-    };
-  }
-
+  setContext(storyName);
   func();
 
   if(afterFunc[currentStory]) afterFunc[currentStory]();
 
-  currentStory = "";
+  clearContext();
   return storyName;
 };
 
@@ -34,10 +62,10 @@ export const it = function (desc, func) {
   if(beforeEachFunc[currentStory]) beforeEachFunc[currentStory]();
   try {
     func();
-    results[currentStory].goodResults.push(desc);
+    currentContext.goodResults.push(desc);
   } catch (e) {
     console.error(`${currentStory} - ${desc} : ${e}`);
-    results[currentStory].wrongResults.push({spec: desc, message: e.message});
+    currentContext.wrongResults.push({spec: desc, message: e.message});
   }
   if(afterEachFunc[currentStory]) afterEachFunc[currentStory]();
 };
@@ -68,7 +96,9 @@ export const xit = function (desc, func) {
 
 export const xdescribe = function (storyName, func){
   currentStory = storyName;
-  results[currentStory] = {
+  currentContext = {
+    children: {},
+    name: storyName,
     goodResults: [],
     wrongResults: []
   };
@@ -76,11 +106,9 @@ export const xdescribe = function (storyName, func){
 };
 
 describe.skip = function (storyName, func){
-  currentStory = storyName;
-  results[currentStory] = {
-    goodResults: [],
-    wrongResults: []
-  };
+  setContext(storyName, {
+    skipped: true
+  });
   return storyName;
 };
 
@@ -93,15 +121,11 @@ it.skip = function (desc, func) {
 };
 
 describe.only = function (storyName, func) {
-  currentStory = storyName;
-  results[currentStory] = {
-    goodResults: [],
-    wrongResults: []
-  };
-
+  setContext(storyName);
   func();
 
   if(afterFunc[currentStory]) afterFunc[currentStory]();
 
+  clearContext();
   return storyName;
 };

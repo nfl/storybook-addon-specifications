@@ -10,8 +10,32 @@ export default StyleSheet.create({
     fontSize: 12,
     letterSpacing: 1,
     textDecoration: 'none',
-    listStyleType: 'none'
+    margin: '2em',
+    paddingLeft: '1em'
   },
+
+  childrenWrapper: {
+    borderLeft: '1px solid rgba(0, 0, 0, 0.02)',
+    marginLeft: '1em',
+    paddingLeft: '1em',
+    transition: 'border 0.25s ease-in-out',
+
+    ':hover': {
+        borderLeft: '1px solid rgba(0, 0, 0, 0.2)',
+    }
+  },
+
+  skipped: {
+    color: 'darkcyan',
+
+    ':before': {
+      content: "'-'",
+      padding: '3px 5px',
+      float: 'left',
+      marginTop: '-2px'
+    }
+  },
+
   error: {
     ':before': {
       content: "'✘'",
@@ -20,16 +44,35 @@ export default StyleSheet.create({
     }
   },
 
+  list: {
+    margin: '1em 1em 2em',
+    padding: 0,
+    listStyleType: 'none',
+  },
+
   li: {
+    lineHeight: '2',
+
     ':before': {
       marginRight: '5px',
-      marginTop: '11px',
+      marginTop: '0',
       fontSize: '70%',
       color: 'white',
       fontWeight: 'bold',
       borderRadius: '12px',
-      float: 'left'
+      display: 'inline-block',
+      lineHeight: '1'
     }
+  },
+
+  heading: {
+    margin: 0
+  },
+
+  p: {
+    display: 'inline-block',
+    marginTop: 0,
+    marginBottom: 0
   },
 
   message: {

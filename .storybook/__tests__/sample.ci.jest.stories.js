@@ -48,6 +48,30 @@ stories.add('Hello Earth', function () {
       let output = mount(helloEarthStory);
       expect(output.text()).toContain('Hello Earth');
     });
+
+    describe('Goodbye Earth', function () {
+        const goodbyeEarthStory =
+          <button onClick={action('Goodbye Earth')}>
+            Goodbye Earth
+          </button>;
+
+        it('Should have the Goodbye Earth label', function () {
+          let output = mount(goodbyeEarthStory);
+          expect(output.text()).toContain('Goodbye Earth');
+        });
+
+        describe('Infinite Earths', function () {
+            const infiniteEarthsStory =
+              <button onClick={action('Infinite Earths')}>
+                Infinite Earths
+              </button>;
+
+            it('Should have the Infinite Earths label', function () {
+                let output = mount(infiniteEarthsStory);
+                expect(output.text()).toContain('Infinite Earths');
+            });
+        });
+    });
   }));
 
   return helloEarthStory;
