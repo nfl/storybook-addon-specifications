@@ -9,17 +9,17 @@ const beforeEachFunc = {};
 const afterFunc = {};
 const afterEachFunc = {};
 
-function setContext(storyName, {
-  skipped
-} = {}) {
+function setContext(storyName, options) {
+  options = options || {};
   if (!currentStory) {
     currentStory = storyName;
     results[currentStory] = {
       children: {},
       name: storyName,
-      skipped: skipped || false,
+      skipAll: options.skipAll || false,
       goodResults: [],
-      wrongResults: []
+      wrongResults: [],
+      skippedResults: []
     };
     currentContext = results[currentStory];
   } else {
@@ -27,9 +27,10 @@ function setContext(storyName, {
       currentContext.children[storyName] = {
         children: {},
         name: storyName,
-        skipped: skipped || false,
+        skipAll: options.skipAll || false,
         goodResults: [],
-        wrongResults: []
+        wrongResults: [],
+        skippedResults: []
       };
     }
 
@@ -58,7 +59,14 @@ export const describe = (storyName, func) => {
   return storyName;
 };
 
-export const it = function (desc, func) {
+export const it = function (desc, func, options) {
+  options = options || {};
+
+  if (currentContext.skipAll || options.skipped) {
+    currentContext.skippedResults.push(desc);
+    return;
+  }
+
   if(beforeEachFunc[currentStory]) beforeEachFunc[currentStory]();
   try {
     func();
@@ -107,8 +115,11 @@ export const xdescribe = function (storyName, func){
 
 describe.skip = function (storyName, func){
   setContext(storyName, {
-    skipped: true
+    skipAll: true
   });
+  func();
+
+  clearContext();
   return storyName;
 };
 
@@ -117,7 +128,9 @@ it.only = function (desc, func) {
 };
 
 it.skip = function (desc, func) {
-
+  it(desc, null, {
+      skipped: true
+  });
 };
 
 describe.only = function (storyName, func) {

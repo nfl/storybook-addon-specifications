@@ -25,14 +25,14 @@ export default StyleSheet.create({
     }
   },
 
-  skipped: {
-    color: 'darkcyan',
-
+  skip: {
     ':before': {
       content: "'-'",
       padding: '3px 5px',
-      float: 'left',
-      marginTop: '-2px'
+      marginTop: '-3px',
+      fontWeight: 'bold',
+      fontSize: '100%',
+      backgroundColor: 'darkcyan'
     }
   },
 

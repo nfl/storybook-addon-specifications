@@ -3,9 +3,15 @@ import {css} from "aphrodite";
 import specs from "./style"
 
 export default class Specifications extends Component {
-  renderResults({name, child, skipped, wrongResults, goodResults}) {
+  renderResults({
+    name,
+    child,
+    wrongResults,
+    goodResults,
+    skippedResults
+  }) {
     return (
-      <div className={skipped ? css(specs.skipped) : css(specs.parentWrapper)}>
+      <div className={css(specs.parentWrapper)}>
         {child ? <h4 className={css(specs.heading)}>{name}</h4> : <h3 className={css(specs.heading)}>{name}</h3>}
         <ul className={css(specs.list)}>
           {wrongResults.map((r, idx) =>
@@ -15,6 +21,12 @@ export default class Specifications extends Component {
 
           {goodResults.map((r, idx) =>
             <li className={css(specs.pass, specs.li)} key={idx}>
+              <p className={css(specs.p)}>{r}</p>
+            </li>
+          )}
+
+          {skippedResults.map((r, idx) =>
+            <li className={css(specs.li, specs.skip)} key={idx}>
               <p className={css(specs.p)}>{r}</p>
             </li>
           )}

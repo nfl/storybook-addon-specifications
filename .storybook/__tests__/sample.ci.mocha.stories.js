@@ -64,6 +64,11 @@ stories.add('Hello Earth', function () {
           expect(output.text()).toContain('Goodbye Earth');
         });
 
+        it.skip('Should be skipped', function () {
+          let output = mount(goodbyeEarthStory);
+          expect(output.text()).toContain('Goodbye Earth');
+        });
+
         describe('Infinite Earths', function () {
             const infiniteEarthsStory =
               <button onClick={action('Infinite Earths')}>
@@ -77,6 +82,12 @@ stories.add('Hello Earth', function () {
 
             describe.skip('Parallel Universe', function () {
               it('Should be skipped', function () {
+                expect(false).toBe(true);
+              });
+              it('Should also be skipped', function () {
+                expect(false).toBe(true);
+              });
+              it('Should be skipped as well', function () {
                 expect(false).toBe(true);
               });
             });
