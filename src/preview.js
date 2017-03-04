@@ -14,16 +14,19 @@ export function specs(specs) {
 }
 
 export const describe = (storyName, func) => {
-  currentStory = storyName;
-  results[currentStory] = {
-    goodResults: [],
-    wrongResults: []
-  };
+  if (!currentStory) {
+    currentStory = storyName;
+    results[currentStory] = {
+      goodResults: [],
+      wrongResults: []
+    };
+  }
 
   func();
 
   if(afterFunc[currentStory]) afterFunc[currentStory]();
 
+  currentStory = "";
   return storyName;
 };
 
